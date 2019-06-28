@@ -59,14 +59,18 @@ Instructions:
 
   window.addEventListener('WebComponentsReady', function() {
     home = document.querySelector('section[data-route="home"]');
-    /*
-    Refactor this code!
-     */
+
     getJSON('../data/earth-like-results.json')
     .then(function(response) {
+      var sequence = Promise.resolve();
+
       response.results.forEach(function(url) {
+        sequence = sequence.then(function() {
+          return getJSON(url);
+        });
         getJSON(url).then(createPlanetThumb);
       });
-    });
+    })
+    .catch(function(e) {});
   });
 })(document);
